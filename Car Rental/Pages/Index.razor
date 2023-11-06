@@ -1,0 +1,117 @@
+﻿@page "/"
+@using Car_Rental.Business.Classes;
+@using Car_Rental.Common.Interfaces;
+@using Car_Rental.Common.Enums;
+@inject BookingProcessor bp
+
+<PageTitle>Car Rental</PageTitle>
+
+<h1>Car Rental</h1>
+
+<div class="row">
+    @* Vehicles *@
+    <table class="table table-borderless" style="border:1px solid black; width:800px;">
+        <thead>
+            <tr>
+                <th scope="col">RegNo</th>
+                <th scope="col">Make</th>
+                <th scope="col">Odometer</th>
+                <th scope="col">Cost Km</th>
+                <th scope="col">Vehicle Type</th>
+                <th scope="col">$ Day</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vehicle in bp.GetVehicles())
+            {
+                <tr>
+                    <th scope="row">@vehicle.RegNo</th>
+                    <td>@vehicle.Make</td>
+                    <td>@vehicle.Odometer</td>
+                    <td>@vehicle.CostPerKm</td>
+                    <td>@vehicle.VehicleType</td>
+                    <td>@vehicle.CostPerDay</td>
+                    <td>
+                        @if (vehicle.Status.Equals(VehicleStatuses.Available))
+                        {
+                            <span class="badge btn-badge rounded-pill bg-dark">@vehicle.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge btn-badge rounded-pill bg-danger">@vehicle.Status</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+
+<div class="row">
+    @* Bookings *@
+    <table class="table table-hover" style="border:1px solid black; width:800px;">
+        <thead>
+            <tr>
+                <th scope="col">RegNo</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Km Rented</th>
+                <th scope="col">Km Returned</th>
+                <th scope="col">Rented</th>
+                <th scope="col">Returned</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in bp.GetBookings())
+            {
+                <tr>
+                    <th scope="row">@booking.RegNo</th>
+                    <td>@booking.Customer</td>
+                    <td>@booking.KmRented</td>
+                    <td>@if (booking.KmReturned != default) @booking.KmReturned</td>
+                    <td>@booking.DateRented.ToString("MM/dd/yyyy")</td>
+                    <td>@if (@booking.DateReturned != default) @booking.DateReturned.ToString("MM/dd/yyyy")</td>
+                    <td>@if (booking.Cost != default) @booking.Cost</td>
+                    <td>
+                        @if (booking.Status.Equals(VehicleStatuses.Available))
+                        {
+                            <span class="badge btn-badge bg-success">Closed</span>
+                        }
+                        else
+                        {
+                            <span class="badge btn-badge bg-danger">Open</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+
+<div class="row">
+    @* Customers *@
+    <table class="table table-hover" style="border:1px solid black; width:400px;">
+        <thead>
+            <tr>
+                <th scope="col">SSN</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">First Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in bp.GetCustomers())
+            {
+                <tr>
+                    <th scope="row">@customer.Ssn</th>
+                    <td>@customer.LastName</td>
+                    <td>@customer.FirstName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
